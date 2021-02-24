@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './screens/Home';
 import Accenture from './screens/Accenture';
+import Contact from './screens/Contact';
 
 import Header from './components/Header';
 
@@ -31,7 +32,15 @@ export default function Route() {
             headerShown: true,
             header: () => <Header showCancel={false} title='Accenture'/>
           }}
-        />  
+        /> 
+        <Screen 
+          name="contact"
+          component={Contact}
+          options= {{
+            headerShown: true,
+            header: () => <Header showCancel={true} title='Contact'/>
+          }}
+        /> 
       </Navigator>
     </NavigationContainer>
   )
