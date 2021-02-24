@@ -1,30 +1,58 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
+import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
 
 import AccentureLogo from '../images/Accenture.png';
+import { getData } from '../services';
+import { useNavigation, useRoute } from '@react-navigation/native';
 // import { Container } from './styles';
+import { GetUnit, HeaderProps, IAllUnits } from '../interfaces';
 
-export default function Accenture() {
+export default function Accenture({ title }: HeaderProps, { id }: GetUnit) {
+  const route = useRoute();
+  const params = route.params as GetUnit
+  
+  const [ unit, setUnit ] = useState<IAllUnits>()
+
+  useEffect( () => {
+    getData.get(`find?id=${params.id}`).then(
+      response => setUnit(response.data)
+    )
+  }, [ params.id ])
+
+  const navigation = useNavigation();
+  function handlePushContact() {
+    navigation.navigate('contact');
+  }
   return (
-    <View style={styles.container}>
-      <Image 
-        style={styles.logo}
-        source={AccentureLogo}
-        // width={ 60 }
-        // height={ 232 }
-      />
-      <Text style={styles.title} >Accenture</Text>
-      <Text style={styles.paragraph}>Texto complementar</Text>
+    <ScrollView>
+      <View style={styles.container}>
+      
+        <Image style={styles.topImage} source={{uri:unit?.profile}}/>       
+        
+        <Image 
+          style={styles.logo}
+          source={AccentureLogo}
+          // width={ 60 }
+          // height={ 232 }
+        />
+        <Text style={styles.title}>{unit?.name}</Text>
+        <Text style={styles.paragraph}>{unit?.describle}</Text>
 
-      <RectButton 
-        style={styles.contactButton}
-        onPress={() => {alert('chunchionou')}}>
-        <Text style={styles.textButton}>Entrar em contato</Text> 
-        < Feather name='send' size={ 20 } />
-      </RectButton>
-    </View>
+        <Text style={styles.details}> País: {unit?.country}</Text>
+        <Text style={styles.details}> Estado: {unit?.state}</Text>
+        <Text style={styles.details}> Cidade: {unit?.city}</Text>
+        <Text style={styles.details}> Endereço: {unit?.address.street}, {unit?.address.number}</Text>
+
+        <RectButton 
+          style={styles.contactButton}
+          onPress={handlePushContact}>
+          <Text style={styles.textButton}>Entrar em contato</Text> 
+          < Feather name='send' size={ 20 } color={'#A100FF'}/>
+        </RectButton>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -36,7 +64,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginBottom: 20,
-    height: 62,
+    marginVertical: 20,
+    height: 61,
     width: 236,
   },
   title: {
@@ -47,6 +76,7 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     fontSize: 14,
+    marginHorizontal: 15,
     textAlign: 'left',
     color: '#8f8f8f'
   },
@@ -56,10 +86,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     color: '#A100FF',
     marginTop: 22,
+    marginBottom: 50,
   },
   textButton: {
     color: '#A100FF',
     fontSize: 18,
     marginRight: 18,
+  },
+  topImage: {
+    width: Dimensions.get('window').width,
+    height: 200,
+  },
+  details: {
+    marginVertical: 6,
+    color: '#8f8f8f'
   }
 })
