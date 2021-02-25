@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import Accenture from './screens/Accenture';
 import Contact from './screens/Contact';
+import AsyncStorageComponent from './screens/AsyncStorage';
 
 import Header from './components/Header';
 
@@ -39,6 +40,14 @@ export default function Route() {
           options= {{
             headerShown: true,
             header: () => <Header showCancel={true} title='Contact'/>
+          }}
+        />
+        <Screen 
+          name="storage"
+          component={AsyncStorageComponent}
+          options= {{
+            headerShown: true,
+            header: () => <Header showCancel={true} title='Storage'/>
           }}
         /> 
       </Navigator>
